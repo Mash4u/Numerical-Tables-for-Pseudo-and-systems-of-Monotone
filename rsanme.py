@@ -100,17 +100,17 @@ class RSANME:
             
             # Self-adaptive step size with backtracking line search
             t = 1.0
-            while True:
+            max_line_search_iter = 20
+            for _ in range(max_line_search_iter):
                 x_new = x + self.alpha * t * d
                 F_new = self.func(x_new)
+                residual_new = np.linalg.norm(F_new)
                 
-                # Armijo condition
-                if np.linalg.norm(F_new) <= (1 - self.gamma * t) * residual:
+                # Sufficient decrease condition
+                if residual_new <= (1 - self.gamma * self.alpha * t) * residual:
                     break
                 
                 t *= self.beta
-                if t < 1e-10:
-                    break
             
             history['step_sizes'].append(t)
             
