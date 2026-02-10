@@ -126,27 +126,34 @@ class RSANME:
     
     def compute_convergence_rate(self, errors: list) -> float:
         """
-        Compute the convergence rate.
+        Compute the convergence rate (order of convergence).
+        
+        Uses the formula: p ≈ log(||e_k|| / ||e_{k-1}||) / log(||e_{k-1}|| / ||e_{k-2}||)
+        where e_k is the error at iteration k.
         
         Parameters:
         -----------
         errors : list
-            List of error norms
+            List of error norms at each iteration
             
         Returns:
         --------
         rate : float
-            Estimated convergence rate
+            Estimated order of convergence (e.g., 2 for quadratic convergence)
         """
         if len(errors) < 3:
             return 0.0
         
-        # Compute convergence rate using last few iterations
+        # Compute convergence rates from consecutive error ratios
         rates = []
         for i in range(2, len(errors)):
-            if errors[i] > 0 and errors[i-1] > 0:
-                rate = np.log(errors[i]) / np.log(errors[i-1])
-                rates.append(rate)
+            if errors[i] > 0 and errors[i-1] > 0 and errors[i-2] > 0:
+                ratio_curr = errors[i] / errors[i-1]
+                ratio_prev = errors[i-1] / errors[i-2]
+                if ratio_prev > 0 and ratio_prev != 1.0:
+                    rate = np.log(ratio_curr) / np.log(ratio_prev)
+                    if 0 < rate < 10:  # Filter out unrealistic values
+                        rates.append(rate)
         
         return np.mean(rates) if rates else 0.0
 

@@ -35,7 +35,7 @@ def test_newton_convergence():
     
     # Newton's method typically converges in very few iterations
     # for well-conditioned problems with good initial guesses
-    MAX_EXPECTED_ITERATIONS = 10
+    EXPECTED_NEWTON_ITERATIONS = 10
     
     problem = Problem3(5)
     x_sol, info = modified_newton_method(
@@ -45,8 +45,8 @@ def test_newton_convergence():
     )
     
     assert info['converged'], "Newton should converge on exponential system"
-    assert info['num_iterations'] < MAX_EXPECTED_ITERATIONS, \
-        "Newton should converge fast on this problem"
+    assert info['num_iterations'] < EXPECTED_NEWTON_ITERATIONS, \
+        f"Newton should converge in less than {EXPECTED_NEWTON_ITERATIONS} iterations"
     
     print("  ✓ Newton convergence test passed")
 

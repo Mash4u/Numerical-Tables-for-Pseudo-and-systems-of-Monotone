@@ -72,6 +72,11 @@ def plot_performance_profile(results_df, filename='performance_profile.png'):
     filename : str
         Name of output file
     """
+    # Performance profile parameters
+    MIN_TAU = 1.0
+    MAX_TAU = 3.0
+    NUM_POINTS = 100
+    
     plt.figure(figsize=(10, 6))
     
     methods = results_df['method_label'].unique()
@@ -81,7 +86,7 @@ def plot_performance_profile(results_df, filename='performance_profile.png'):
         iterations = method_results['iterations'].values
         
         # Compute performance profile
-        tau_values = np.linspace(1, 3, 100)
+        tau_values = np.linspace(MIN_TAU, MAX_TAU, NUM_POINTS)
         rho_values = []
         
         for tau in tau_values:
@@ -107,7 +112,7 @@ def plot_performance_profile(results_df, filename='performance_profile.png'):
     plt.title('Performance Profile', fontsize=14)
     plt.legend()
     plt.grid(True, alpha=0.3)
-    plt.xlim([1, 3])
+    plt.xlim([MIN_TAU, MAX_TAU])
     plt.ylim([0, 1.1])
     plt.tight_layout()
     plt.savefig(filename, dpi=300, bbox_inches='tight')
