@@ -147,6 +147,42 @@ def test_residual_decrease():
     print(f"  ✓ Residual decrease test passed ({decrease_count}/{total_steps} decreasing)")
 
 
+def test_parameter_validation():
+    """Test that invalid parameters are rejected."""
+    print("Testing parameter validation...")
+    
+    problem = Problem3(5)
+    
+    # Test invalid alpha values
+    try:
+        RSANME(problem.func, problem.jacobian, problem.initial_guess(), alpha=-0.1)
+        assert False, "Should reject negative alpha"
+    except ValueError:
+        pass
+    
+    try:
+        RSANME(problem.func, problem.jacobian, problem.initial_guess(), alpha=1.5)
+        assert False, "Should reject alpha > 1"
+    except ValueError:
+        pass
+    
+    # Test invalid beta values
+    try:
+        RSANME(problem.func, problem.jacobian, problem.initial_guess(), beta=0)
+        assert False, "Should reject beta = 0"
+    except ValueError:
+        pass
+    
+    # Test invalid gamma values
+    try:
+        RSANME(problem.func, problem.jacobian, problem.initial_guess(), gamma=1.0)
+        assert False, "Should reject gamma = 1"
+    except ValueError:
+        pass
+    
+    print("  ✓ Parameter validation test passed")
+
+
 def run_all_tests():
     """Run all tests."""
     print("=" * 70)
@@ -161,6 +197,7 @@ def run_all_tests():
         test_broyden_system,
         test_different_alphas,
         test_residual_decrease,
+        test_parameter_validation,
     ]
     
     passed = 0

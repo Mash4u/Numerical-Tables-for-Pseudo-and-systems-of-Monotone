@@ -8,6 +8,9 @@ and systems of monotone operators.
 import numpy as np
 from typing import Callable, Tuple, Optional, Dict
 
+# Algorithm constants
+MAX_LINE_SEARCH_ITERATIONS = 20
+
 
 class RSANME:
     """
@@ -53,6 +56,15 @@ class RSANME:
         self.x0 = np.array(x0, dtype=float)
         self.tol = tol
         self.max_iter = max_iter
+        
+        # Validate parameters
+        if not (0 < alpha < 1):
+            raise ValueError(f"alpha must be in (0, 1), got {alpha}")
+        if not (0 < beta < 1):
+            raise ValueError(f"beta must be in (0, 1), got {beta}")
+        if not (0 < gamma < 1):
+            raise ValueError(f"gamma must be in (0, 1), got {gamma}")
+        
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
@@ -100,8 +112,7 @@ class RSANME:
             
             # Self-adaptive step size with backtracking line search
             t = 1.0
-            max_line_search_iter = 20
-            for _ in range(max_line_search_iter):
+            for _ in range(MAX_LINE_SEARCH_ITERATIONS):
                 x_new = x + self.alpha * t * d
                 F_new = self.func(x_new)
                 residual_new = np.linalg.norm(F_new)
