@@ -33,6 +33,10 @@ def test_newton_convergence():
     """Test that classical Newton method converges."""
     print("Testing Newton method convergence...")
     
+    # Newton's method typically converges in very few iterations
+    # for well-conditioned problems with good initial guesses
+    MAX_EXPECTED_ITERATIONS = 10
+    
     problem = Problem3(5)
     x_sol, info = modified_newton_method(
         func=problem.func,
@@ -41,7 +45,8 @@ def test_newton_convergence():
     )
     
     assert info['converged'], "Newton should converge on exponential system"
-    assert info['num_iterations'] < 10, "Newton should converge fast on this problem"
+    assert info['num_iterations'] < MAX_EXPECTED_ITERATIONS, \
+        "Newton should converge fast on this problem"
     
     print("  ✓ Newton convergence test passed")
 

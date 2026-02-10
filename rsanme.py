@@ -143,7 +143,7 @@ class RSANME:
         
         # Compute convergence rate using last few iterations
         rates = []
-        for i in range(len(errors) - 2, len(errors) - 1):
+        for i in range(2, len(errors)):
             if errors[i] > 0 and errors[i-1] > 0:
                 rate = np.log(errors[i]) / np.log(errors[i-1])
                 rates.append(rate)
