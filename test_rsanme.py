@@ -121,6 +121,9 @@ def test_residual_decrease():
     """Test that residual decreases monotonically (or mostly)."""
     print("Testing residual decrease...")
     
+    # Expect residual to decrease in at least this fraction of iterations
+    MIN_DECREASE_RATIO = 0.7
+    
     problem = Problem3(5)
     solver = RSANME(
         func=problem.func,
@@ -138,8 +141,8 @@ def test_residual_decrease():
                         if residuals[i+1] < residuals[i])
     total_steps = len(residuals) - 1
     
-    assert decrease_count > 0.7 * total_steps, \
-        "Residual should decrease in most iterations"
+    assert decrease_count > MIN_DECREASE_RATIO * total_steps, \
+        f"Residual should decrease in at least {MIN_DECREASE_RATIO*100}% of iterations"
     
     print(f"  ✓ Residual decrease test passed ({decrease_count}/{total_steps} decreasing)")
 
